@@ -53,26 +53,34 @@ struct DivinationResultSections: View {
                 .font(.subheadline.weight(isMoving ? .semibold : .regular))
                 .foregroundStyle(isMoving ? .red : .secondary)
 
-            Text("爻辞")
-                .font(.caption)
-                .foregroundStyle(.tertiary)
-            Text(yao)
-                .foregroundStyle(.primary)
-
-            Text("白话")
-                .font(.caption)
-                .foregroundStyle(.tertiary)
-            Text(result.allLineSummaries[i].isEmpty ? "（暂无）" : result.allLineSummaries[i])
-                .foregroundStyle(result.allLineSummaries[i].isEmpty ? .secondary : .primary)
-
-            if xx.isEmpty {
-                Text("象曰：（暂无）")
-                    .font(.footnote)
+            VStack(alignment: .leading, spacing: 4) {
+                Text("爻辞")
+                    .font(.caption)
                     .foregroundStyle(.tertiary)
-            } else {
+                Text(yao)
+                    .font(.system(size: 16))
+                    .lineSpacing(4)
+                    .foregroundStyle(.primary)
+            }
+
+            if !result.allLineSummaries[i].isEmpty {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("白话")
+                        .font(.caption)
+                        .foregroundStyle(.tertiary)
+                    Text(result.allLineSummaries[i])
+                        .font(.system(size: 14))
+                        .lineSpacing(3)
+                        .foregroundStyle(.secondary)
+                }
+            }
+
+            if !xx.isEmpty {
                 Text("象曰：\(xx)")
                     .font(.footnote)
+                    .lineSpacing(3)
                     .foregroundStyle(.secondary)
+                    .padding(.top, 2)
             }
         }
         .padding(.vertical, 6)

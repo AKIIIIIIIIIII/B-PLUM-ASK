@@ -243,6 +243,42 @@ struct ResultView: View {
                     .fill(Color(hex: "B22222").opacity(0.3))
                     .frame(width: 3)
             }
+
+            // 所有爻位
+            VStack(alignment: .leading, spacing: 32) {
+                sectionEyebrow(english: "All Lines", chinese: "六 爻")
+
+                VStack(alignment: .leading, spacing: 24) {
+                    ForEach(0..<6, id: \.self) { i in
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("第 \(i + 1) 爻")
+                                .font(.custom("Inter", size: 12).weight(.bold))
+                                .foregroundStyle(Color(hex: "1A1A1A").opacity(0.4))
+
+                            Text(result.allLineTexts[i])
+                                .font(.custom("Noto Serif SC", size: 16))
+                                .lineSpacing(4)
+                                .foregroundStyle(Color(hex: "1A1A1A").opacity(0.85))
+
+                            if !result.allLineSummaries[i].isEmpty {
+                                Text(result.allLineSummaries[i])
+                                    .font(.custom("Inter", size: 13).weight(.light))
+                                    .lineSpacing(3)
+                                    .foregroundStyle(Color(hex: "1A1A1A").opacity(0.5))
+                            }
+
+                            if !result.allLineXiang[i].isEmpty {
+                                Text("象曰：\(result.allLineXiang[i])")
+                                    .font(.custom("Noto Serif SC", size: 13))
+                                    .lineSpacing(3)
+                                    .foregroundStyle(Color(hex: "1A1A1A").opacity(0.4))
+                                    .padding(.top, 2)
+                            }
+                        }
+                    }
+                }
+            }
+            .padding(.top, 16)
         }
     }
 
@@ -284,11 +320,21 @@ struct ResultView: View {
     }
 
     private var primaryDisplayCharacter: String {
-        String(result.hexagramName.first ?? Character("卦"))
+        let name = result.hexagramName
+        if name.contains("为") {
+            // 纯卦如“乾为天”，取首字“乾”
+            return String(name.first ?? Character("卦"))
+        } else if name.count > 2 {
+            // 杂卦如“雷泽归妹”，去掉前两个卦象字“雷泽”，取后面的“归妹”
+            let index = name.index(name.startIndex, offsetBy: 2)
+            return String(name[index...])
+        } else {
+            return name
+        }
     }
 
     private var transliterationText: String {
-        let character = String(result.hexagramName.first ?? Character("卦"))
+        let character = String(primaryDisplayCharacter.first ?? Character("卦"))
         switch character {
         case "乾": return "Qián"
         case "坤": return "Kūn"
